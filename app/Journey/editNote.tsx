@@ -109,7 +109,12 @@ export default function EditNoteScreen() {
     }
     setLoading(true);
     try {
+      // Ambil user_id dari session
+      const sessionStr = await require('@react-native-async-storage/async-storage').default.getItem('@travelmate/user_session');
+      const session = sessionStr ? JSON.parse(sessionStr) : null;
+      const user_id = session && session.user_id ? session.user_id : '';
       await updateTravelNote(id as string, {
+        user_id, // pastikan user_id selalu dikirim
         title,
         description,
         photo_url: photoUri || '',

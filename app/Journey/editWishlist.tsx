@@ -37,13 +37,18 @@ export default function EditWishlistScreen() {
   };
 
   const handleSave = async () => {
-    if (!placeName || !coordinate) {
-      Alert.alert('Error', 'Nama dan lokasi wajib diisi');
+    if (!placeName) {
+      Alert.alert('Error', 'Nama tempat wajib diisi');
       return;
     }
     setLoading(true);
     try {
+      // Ambil user_id dari session
+      const sessionStr = await require('@react-native-async-storage/async-storage').default.getItem('@travelmate/user_session');
+      const session = sessionStr ? JSON.parse(sessionStr) : null;
+      const user_id = session && session.user_id ? session.user_id : '';
       await updateWishlist(id as string, {
+        user_id, // pastikan user_id selalu dikirim
         place_name: placeName,
         location: location || '',
         coordinate: coordinate || '',

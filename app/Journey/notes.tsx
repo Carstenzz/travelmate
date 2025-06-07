@@ -39,7 +39,7 @@ export default function NotesScreen() {
       <ScrollView contentContainerStyle={{ padding: 16 }}>
         {notes.length === 0 && <Text style={{ textAlign: 'center', marginTop: 32 }}>Belum ada catatan.</Text>}
         {notes.map(note => (
-          <TouchableOpacity key={note.id} style={styles.card} onPress={() => router.push({ pathname: '/Journey/noteDetail', params: { id: note.id } })}>
+          <TouchableOpacity key={note.id} style={styles.card} onPress={() => router.push({ pathname: '/Journey/editNote', params: { id: note.id } })}>
             {note.photo_url ? (
               <Image source={{ uri: note.photo_url }} style={styles.cardImage} />
             ) : null}

@@ -20,8 +20,8 @@ export default function AddWishlistScreen() {
   };
 
   const handleSave = async () => {
-    if (!placeName || !coordinate) {
-      Alert.alert('Error', 'Nama dan lokasi wajib diisi');
+    if (!placeName) {
+      Alert.alert('Error', 'Nama tempat wajib diisi');
       return;
     }
     setLoading(true);

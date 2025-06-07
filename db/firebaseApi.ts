@@ -38,7 +38,8 @@ export async function getTravelNotesByUser(user_id: string) {
   if (!data.documents) return [];
   return data.documents
     .map(parseDoc)
-    .filter((n: any) => n.user_id === user_id);
+    .filter((n: any) => n.user_id === user_id)
+    .sort((a: any, b: any) => Number(a.created_at || 0) - Number(b.created_at || 0));
 }
 
 // Add travel note
@@ -51,8 +52,10 @@ export async function addTravelNote(note: {
   coordinate?: string;
 }) {
   const url = `${FIREBASE_BASE_URL}/travel_note`;
+  const created_at = Date.now().toString();
   const body = {
     fields: {
+      created_at: { stringValue: created_at },
       user_id: { stringValue: note.user_id },
       title: { stringValue: note.title },
       description: { stringValue: note.description },
@@ -73,7 +76,8 @@ export async function getWishlistByUser(user_id: string) {
   if (!data.documents) return [];
   return data.documents
     .map(parseDoc)
-    .filter((n: any) => n.user_id === user_id);
+    .filter((n: any) => n.user_id === user_id)
+    .sort((a: any, b: any) => Number(a.created_at || 0) - Number(b.created_at || 0));
 }
 
 // Add wishlist
@@ -84,8 +88,10 @@ export async function addWishlist(wish: {
   coordinate?: string;
 }) {
   const url = `${FIREBASE_BASE_URL}/travel_wishlist`;
+  const created_at = Date.now().toString();
   const body = {
     fields: {
+      created_at: { stringValue: created_at },
       user_id: { stringValue: wish.user_id },
       place_name: { stringValue: wish.place_name },
       location: { stringValue: wish.location || '' },
@@ -114,15 +120,20 @@ export async function deleteTravelNote(id: string) {
 
 // Update travel note by id
 export async function updateTravelNote(id: string, note: {
+  user_id: string;
   title: string;
   description: string;
   photo_url?: string;
   location?: string;
   coordinate?: string;
+  created_at?: string;
 }) {
   const url = `${FIREBASE_BASE_URL}/travel_note/${id}`;
+  // Pastikan created_at tetap ada pada update
   const body = {
     fields: {
+      created_at: { stringValue: note.created_at || id },
+      user_id: { stringValue: note.user_id },
       title: { stringValue: note.title },
       description: { stringValue: note.description },
       photo_url: { stringValue: note.photo_url || '' },
@@ -151,19 +162,41 @@ export async function deleteWishlist(id: string) {
 
 // Update wishlist by id
 export async function updateWishlist(id: string, wish: {
+  user_id: string;
   place_name: string;
   location?: string;
   coordinate?: string;
+  created_at?: string;
 }) {
   const url = `${FIREBASE_BASE_URL}/travel_wishlist/${id}`;
+  // Pastikan created_at tetap ada pada update
   const body = {
     fields: {
+      created_at: { stringValue: wish.created_at || id },
+      user_id: { stringValue: wish.user_id },
       place_name: { stringValue: wish.place_name },
       location: { stringValue: wish.location || '' },
       coordinate: { stringValue: wish.coordinate || '' },
     },
   };
   return fetch(url, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+}
+
+// Add chat message to Firestore
+export async function addChatMessage(msg: { user_id: string; role: string; text: string }) {
+  const url = `${FIREBASE_BASE_URL}/chat`;
+  // Generate numeric created_at using timestamp (for ordering)
+  const created_at = Date.now().toString();
+  const body = {
+    fields: {
+      created_at: { stringValue: created_at },
+      user_id: { stringValue: msg.user_id },
+      role: { stringValue: msg.role },
+      text: { stringValue: msg.text },
+    },
+  };
+  const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  return res.json();
 }
 
 // ...add more CRUD as needed for chat, update, delete, etc...

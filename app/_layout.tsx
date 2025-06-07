@@ -7,7 +7,7 @@ import "../global.css"
 
 const NAV_ITEMS = [
   { name: 'Notes', route: '/Journey/notes', icon: (color: string) => <MaterialIcons name="notes" size={24} color={color} /> },
-  { name: 'Map', route: '/map', icon: (color: string) => <MaterialCommunityIcons name="map-marker" size={24} color={color} /> },
+  { name: 'Chat', route: '/chat', icon: (color: string) => <MaterialCommunityIcons name="chat" size={24} color={color} /> },
   { name: 'Home', route: '/', icon: (color: string) => <MaterialIcons name="home" size={28} color={color} /> },
   { name: 'Jalan-jalan', route: '/jalan-jalan', icon: (color: string) => <FontAwesome5 name="walking" size={22} color={color} /> },
   { name: 'Profile', route: '/profile', icon: (color: string) => <MaterialIcons name="person" size={24} color={color} /> },
