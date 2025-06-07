@@ -5,14 +5,13 @@
     "version": "1.0.0",
 
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
     },
 
     "experiments": {
       "tsconfigPaths": true
     },
-
-    "plugins": [],
 
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -33,6 +32,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       }
-    }
+    },
+    "scheme": "travelmatefirebase"
   }
 }

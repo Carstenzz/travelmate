@@ -11,13 +11,24 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^2.2.0",
     "expo": "^53.0.10",
+    "expo-crypto": "^14.1.5",
+    "expo-image-picker": "^16.1.4",
+    "expo-location": "^18.1.5",
+    "expo-router": "^5.0.7",
     "expo-status-bar": "~2.2.3",
-    "nativewind": "latest",
+    "install": "^0.13.0",
+    "map": "^1.0.1",
+    "maps": "^0.3.3",
+    "native": "^0.3.3",
+    "nativewind": "^4.1.23",
+    "npm": "^11.4.1",
     "react": "19.0.0",
     "react-native": "0.79.3",
-    "react-native-reanimated": "~3.17.4",
-    "react-native-safe-area-context": "5.4.0"
+    "react-native-maps": "1.20.1",
+    "react-native-reanimated": "^3.16.2",
+    "react-native-safe-area-context": "^5.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
@@ -27,9 +38,9 @@
     "eslint-config-prettier": "^10.1.2",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.11",
-    "tailwindcss": "^3.4.0",
+    "tailwindcss": "^3.4.17",
     "typescript": "~5.8.3"
   },
-  "main": "node_modules/expo/AppEntry.js",
+  "main": "expo-router/entry",
   "private": true
 }
