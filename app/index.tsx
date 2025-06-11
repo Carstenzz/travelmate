@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, Image, Animated, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, Image, Animated, StyleSheet, Dimensions, AppState, TouchableOpacity } from 'react-native';
 import { Gyroscope } from 'expo-sensors';
+import * as Notifications from 'expo-notifications';
+import { useRouter } from 'expo-router';
 
 // Ganti spritesheet idle ke mate_idle_simplified_spreadsheet.png dan frame idle ke 14
 const mateIdleSheet = require('../assets/mate_idle_simplified_spreadsheet.png');
@@ -26,6 +28,13 @@ const SPEAK_MESSAGES = [
   'Ada rencana kemana hari ini?'
 ];
 
+const NOTIF_MESSAGES = [
+  'Kemana aja? Mate pengen jalan-jalan nih!',
+  'Ayo, jangan lama-lama ninggalin mate sendiri~',
+  'Mate kangen, yuk jalan-jalan bareng!',
+  'Udah lama nggak dibuka, mate bosan nih!',
+];
+
 export default function HomeScreen() {
   const [mateState, setMateState] = useState<'idle' | 'speak' | 'sleep' | 'wake'>('idle');
   const [bubbleVisible, setBubbleVisible] = useState(false);
@@ -37,6 +46,8 @@ export default function HomeScreen() {
   const [gyroSub, setGyroSub] = useState<any>(null);
   const [frameIdx, setFrameIdx] = useState(0);
   const animTimer = useRef<NodeJS.Timeout | null>(null);
+  const notifTimer = useRef<NodeJS.Timeout | null>(null);
+  const router = useRouter();
 
   // Helper: reset all timers
   const clearAllTimers = () => {
@@ -75,7 +86,7 @@ export default function HomeScreen() {
     if (mateState === 'sleep') {
       let last = { x: 0, y: 0, z: 0 };
       let shakeCount = 0;
-      const threshold = 2.5; // lebih tinggi, harus benar-benar digoyang
+      const threshold = 7; // lebih tinggi, harus benar-benar digoyang
       const sub = Gyroscope.addListener((data: { x: number; y: number; z: number }) => {
         const dx = Math.abs(data.x - last.x);
         const dy = Math.abs(data.y - last.y);
@@ -149,10 +160,43 @@ export default function HomeScreen() {
   const BIG_SPRITE_HEIGHT = screenHeight * 0.6;
   const BIG_SPRITE_WIDTH = BIG_SPRITE_HEIGHT; // tetap square agar pixel art tidak gepeng
 
+  // Request permission on mount
+  useEffect(() => {
+    Notifications.requestPermissionsAsync();
+  }, []);
+
+  // AppState listener untuk notifikasi saat app background
+  useEffect(() => {
+    const handleAppStateChange = (nextState: string) => {
+      if (nextState === 'background' || nextState === 'inactive') {
+        notifTimer.current = setTimeout(() => {
+          Notifications.scheduleNotificationAsync({
+            content: {
+              title: 'TravelMate',
+              body: NOTIF_MESSAGES[Math.floor(Math.random() * NOTIF_MESSAGES.length)],
+            },
+            trigger: null,
+          });
+        }, 10000); // 10 detik
+      } else if (nextState === 'active') {
+        if (notifTimer.current) clearTimeout(notifTimer.current);
+      }
+    };
+    const sub = AppState.addEventListener('change', handleAppStateChange);
+    return () => {
+      if (notifTimer.current) clearTimeout(notifTimer.current);
+      sub.remove();
+    };
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <View style={{ position: 'relative', alignItems: 'center', justifyContent: 'center', width: BIG_SPRITE_WIDTH, height: BIG_SPRITE_HEIGHT }}>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => router.push('/chat')}
+          style={{ position: 'relative', alignItems: 'center', justifyContent: 'center', width: BIG_SPRITE_WIDTH, height: BIG_SPRITE_HEIGHT }}
+        >
           <View style={{ width: BIG_SPRITE_WIDTH, height: BIG_SPRITE_HEIGHT, overflow: 'hidden', alignItems: 'center', justifyContent: 'center' }}>
             <Image
               source={mateSheet}
@@ -181,7 +225,7 @@ export default function HomeScreen() {
               <Text style={styles.bubbleText}>{bubbleText}</Text>
             </View>
           )}
-        </View>
+        </TouchableOpacity>
         {/* <Text style={{ marginTop: 24, fontSize: 18, fontWeight: 'bold', textAlign: 'center' }}>Welcome to TravelMate!</Text> */}
       </View>
     </View>

@@ -3,27 +3,24 @@
     "name": "travelmate-firebase",
     "slug": "travelmate-firebase",
     "version": "1.0.0",
-
     "web": {
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
     },
-
     "experiments": {
       "tsconfigPaths": true
     },
-
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-
     "userInterfaceStyle": "light",
-
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -31,8 +28,14 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.asalasalan1274.travelmatefirebase"
     },
-    "scheme": "travelmatefirebase"
+    "scheme": "travelmatefirebase",
+    "extra": {
+      "eas": {
+        "projectId": "42f83a2f-677a-4cbc-b24c-e387f297a153"
+      }
+    }
   }
 }

@@ -1,7 +1,12 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ActivityIndicator, KeyboardAvoidingView, Platform, Image, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, TextInput, Button, StyleSheet, ActivityIndicator, KeyboardAvoidingView, Platform, Image, TouchableOpacity, Dimensions } from 'react-native';
 import tzlookup from 'tz-lookup';
 import SelectLocationModal from './Journey/modal.selectLocation';
+
+const mateIdleSheet = require('../assets/mate_idle_simplified_spreadsheet.png');
+const SPRITE_FRAMES = 14; // idle frame count
+const { width: screenWidth } = Dimensions.get('window');
+const SPRITE_SIZE = 40; // ukuran icon mate di bubble (square)
 
 export default function JalanJalanScreen() {
   const [uang, setUang] = useState('');
@@ -11,6 +16,22 @@ export default function JalanJalanScreen() {
   const [mateComment, setMateComment] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedLatLon, setSelectedLatLon] = useState<{ lat: number; lon: number; address: string } | null>(null);
+  const [frameIdx, setFrameIdx] = useState(0);
+  const animTimer = useRef<NodeJS.Timeout | null>(null);
+
+  // Animasi frame loop mate idle
+  useEffect(() => {
+    if (mateComment) {
+      setFrameIdx(0);
+      if (animTimer.current) clearInterval(animTimer.current);
+      animTimer.current = setInterval(() => {
+        setFrameIdx((prev) => (prev + 1) % SPRITE_FRAMES);
+      }, 180); // ~6 fps agar smooth tapi tidak terlalu cepat
+    } else {
+      if (animTimer.current) clearInterval(animTimer.current);
+    }
+    return () => { if (animTimer.current) clearInterval(animTimer.current); };
+  }, [mateComment]);
 
   // Helper: fetch location info (currency, timezone) from Nominatim & GeoNames
   const fetchLocationInfo = async (place: string, lat?: number, lon?: number) => {
@@ -198,7 +219,20 @@ export default function JalanJalanScreen() {
         )}
         {mateComment ? (
           <View style={styles.mateBox}>
-            <Image source={require('../assets/icon.png')} style={styles.mateIcon} />
+            <View style={{ width: SPRITE_SIZE, height: SPRITE_SIZE, overflow: 'hidden', marginRight: 12 }}>
+              <Image
+                source={mateIdleSheet}
+                style={{
+                  width: SPRITE_SIZE * SPRITE_FRAMES,
+                  height: SPRITE_SIZE,
+                  transform: [{ translateX: -frameIdx * SPRITE_SIZE }],
+                  position: 'absolute',
+                  left: 0,
+                  top: 0,
+                }}
+                resizeMode="stretch"
+              />
+            </View>
             <Text style={styles.mateText}>{mateComment}</Text>
           </View>
         ) : null}
