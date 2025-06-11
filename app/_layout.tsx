@@ -1,7 +1,7 @@
 import { Slot, useRouter, usePathname } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { getSession } from '../db/userSession';
-import { View, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, ActivityIndicator, TouchableOpacity, Text } from 'react-native';
 import { MaterialCommunityIcons, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 import "../global.css"
 
@@ -21,28 +21,17 @@ function BottomNav({
   navigate: (route: string) => void;
 }) {
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        height: 56,
-        borderTopWidth: 1,
-        borderColor: '#eee',
-        backgroundColor: '#fff',
-        marginBottom: 24,
-      }}
-    >
-      {NAV_ITEMS.map((item, idx) => {
-        const isActive = item.route === '/' ? (current === '/' || current === '/index') : current === item.route;
-        return (
-          <TouchableOpacity
-            key={item.route}
-            style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
-            onPress={() => navigate(item.route)}
-          >
-            {item.icon(isActive ? '#007AFF' : '#444')}
-          </TouchableOpacity>
-        );
-      })}
+    <View style={{ flexDirection: 'row', justifyContent: 'space-around', backgroundColor: '#fff', borderTopWidth: 1, borderColor: '#e3f2fd', paddingVertical: 8, paddingBottom: 32, elevation: 8 }}>
+      {NAV_ITEMS.map(item => (
+        <TouchableOpacity
+          key={item.route}
+          onPress={() => navigate(item.route)}
+          style={{ alignItems: 'center', flex: 1 }}
+        >
+          {item.icon(current === item.route ? '#1976d2' : '#b0bec5')}
+          <Text style={{ color: current === item.route ? '#1976d2' : '#b0bec5', fontSize: 12, marginTop: 2 }}>{item.name}</Text>
+        </TouchableOpacity>
+      ))}
     </View>
   );
 }

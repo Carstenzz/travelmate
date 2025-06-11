@@ -55,12 +55,12 @@ export default function NoteDetailScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 24, alignItems: 'center' },
+  container: { padding: 24, alignItems: 'center', backgroundColor: '#fff' },
   image: { width: 240, height: 180, borderRadius: 12, marginBottom: 16 },
-  title: { fontSize: 22, fontWeight: 'bold', marginBottom: 8 },
+  title: { fontSize: 22, fontWeight: 'bold', marginBottom: 8, color: '#1976d2' },
   label: { fontWeight: 'bold', marginTop: 12 },
   value: { fontSize: 16, marginBottom: 4 },
-  button: { backgroundColor: '#007AFF', padding: 12, borderRadius: 8, minWidth: 80, alignItems: 'center' },
+  button: { backgroundColor: '#1976d2', padding: 12, borderRadius: 8, minWidth: 80, alignItems: 'center' },
   buttonText: { color: '#fff', fontWeight: 'bold' },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
 });

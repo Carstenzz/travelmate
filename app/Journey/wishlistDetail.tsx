@@ -53,7 +53,7 @@ export default function WishlistDetailScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 24, backgroundColor: '#fff', paddingTop: 36 },
-  title: { fontWeight: 'bold', fontSize: 22, marginBottom: 16, textAlign: 'center' },
+  title: { fontWeight: 'bold', fontSize: 22, marginBottom: 16, textAlign: 'center', color: '#1976d2' },
   locationBox: {
     backgroundColor: '#f1f3f4',
     borderRadius: 8,
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   actionButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#1976d2',
     padding: 12,
     borderRadius: 8,
     alignItems: 'center',

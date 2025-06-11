@@ -121,8 +121,8 @@ const styles = StyleSheet.create({
   title: { fontWeight: 'bold', fontSize: 18, marginBottom: 8, textAlign: 'center' },
   searchRow: { flexDirection: 'row', marginBottom: 8 },
   searchInput: { flex: 1, borderWidth: 1, borderColor: '#ccc', borderRadius: 6, padding: 8, marginRight: 8 },
-  searchButton: { backgroundColor: '#007AFF', paddingHorizontal: 14, paddingVertical: 8, borderRadius: 6, alignItems: 'center', justifyContent: 'center' },
+  searchButton: { backgroundColor: '#1976d2', paddingHorizontal: 14, paddingVertical: 8, borderRadius: 6, alignItems: 'center', justifyContent: 'center' },
   map: { width: '100%', height: 450, borderRadius: 10 },
   cancelButton: { padding: 12, borderRadius: 8, backgroundColor: '#eee', minWidth: 80, alignItems: 'center' },
-  saveButton: { padding: 12, borderRadius: 8, backgroundColor: '#34a853', minWidth: 80, alignItems: 'center' },
+  saveButton: { padding: 12, borderRadius: 8, backgroundColor: '#1976d2', minWidth: 80, alignItems: 'center' },
 });

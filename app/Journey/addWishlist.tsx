@@ -76,10 +76,10 @@ export default function AddWishlistScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 24, backgroundColor: '#fff', paddingTop: 36 },
-  title: { fontWeight: 'bold', fontSize: 20, marginBottom: 16, textAlign: 'center' },
-  input: { borderWidth: 1, borderColor: '#ccc', borderRadius: 6, padding: 10, marginBottom: 12 },
+  title: { fontWeight: 'bold', fontSize: 20, marginBottom: 16, textAlign: 'center', color: '#1976d2' },
+  input: { borderWidth: 1, borderColor: '#e3f2fd', borderRadius: 8, padding: 10, marginBottom: 12, backgroundColor: '#f8fafc' },
   locationButton: {
-    backgroundColor: '#34a853',
+    backgroundColor: '#1976d2',
     padding: 12,
     borderRadius: 8,
     alignItems: 'center',

@@ -174,7 +174,7 @@ export default function JalanJalanScreen() {
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <View style={styles.container}>
-        <Text style={styles.title}>Jalan-jalan Page</Text>
+        <Text style={styles.title}>Jalan-jalan</Text>
         <Text style={styles.label}>Mau pergi ke mana?</Text>
         
         <View style={{ flexDirection: 'column', alignItems: 'center', gap: 8 }}>
@@ -186,7 +186,7 @@ export default function JalanJalanScreen() {
           />
           <Text>Atau</Text>
           <TouchableOpacity
-            style={{ backgroundColor: '#34a853', padding: 10, borderRadius: 8 }}
+            style={{ backgroundColor: '#e3f2fd', padding: 10, borderRadius: 8 }}
             onPress={() => setModalVisible(true)}
           >
             <Text style={{ color: '#fff', fontWeight: 'bold' }}>Pilih di Map</Text>
@@ -243,15 +243,15 @@ export default function JalanJalanScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, alignItems: 'center', justifyContent: 'flex-start', padding: 24, backgroundColor: '#fff' },
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 24 },
-  label: { fontSize: 16, marginTop: 30, marginBottom: 8},
-  input: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 8, width: 200, marginBottom: 16 },
+  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 24, color: '#1976d2' },
+  label: { fontSize: 16, marginTop: 30, marginBottom: 8 },
+  input: { borderWidth: 1, borderColor: '#e3f2fd', borderRadius: 8, padding: 8, width: 200, marginBottom: 16, backgroundColor: '#f8fafc' },
   dropdownContainer: { flexDirection: 'row', gap: 8, marginBottom: 16 },
-  dropdownItem: { padding: 8, borderRadius: 8, borderWidth: 1, borderColor: '#ccc', marginHorizontal: 4, fontSize: 16 },
-  selectedDropdown: { backgroundColor: '#e0e0e0', borderColor: '#007AFF' },
+  dropdownItem: { padding: 8, borderRadius: 8, borderWidth: 1, borderColor: '#e3f2fd', marginHorizontal: 4, fontSize: 16, backgroundColor: '#fff' },
+  selectedDropdown: { backgroundColor: '#e3f2fd', borderColor: '#1976d2' },
   resultBox: { marginTop: 24, padding: 16, backgroundColor: '#f5f5f5', borderRadius: 12, alignItems: 'center' },
   resultText: { fontSize: 16, marginBottom: 8 },
   mateBox: { flexDirection: 'row', alignItems: 'center', marginTop: 32, backgroundColor: '#e3f2fd', borderRadius: 16, padding: 12 },
   mateIcon: { width: 40, height: 40, marginRight: 12 },
-  mateText: { fontSize: 16, fontStyle: 'italic', flexShrink: 1 },
+  mateText: { fontSize: 16, fontStyle: 'italic', flexShrink: 1, color: '#1976d2' },
 });

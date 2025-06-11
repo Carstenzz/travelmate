@@ -189,20 +189,31 @@ export default function ChatScreen() {
 
   // Render bubble chat
   const renderItem = ({ item, index }: { item: Message; index: number }) => (
-    <View style={{ alignSelf: item.role === 'user' ? 'flex-end' : 'flex-start', backgroundColor: item.role === 'user' ? '#DCF8C6' : '#EEE', borderRadius: 10, marginVertical: 4, padding: 10, maxWidth: '80%' }}>
+    <View style={{
+      alignSelf: item.role === 'user' ? 'flex-end' : 'flex-start',
+      backgroundColor: item.role === 'user' ? '#1976d2' : '#e3f2fd',
+      borderRadius: 16,
+      marginVertical: 4,
+      padding: 12,
+      maxWidth: '80%',
+      shadowColor: '#1976d2',
+      shadowOpacity: 0.06,
+      shadowRadius: 4,
+      elevation: 2,
+    }}>
       {item.role === 'bot' ? (
-        <Text>{renderTextWithMapButtons(item.text)}</Text>
+        <Text style={{ color: '#222' }}>{renderTextWithMapButtons(item.text)}</Text>
       ) : (
-        <Text>{item.text}</Text>
+        <Text style={{ color: '#fff' }}>{item.text}</Text>
       )}
     </View>
   );
 
   // Render typing bubble
   const renderTyping = () => (
-    <View style={{ alignSelf: 'flex-start', backgroundColor: '#EEE', borderRadius: 10, marginVertical: 4, padding: 10, maxWidth: '80%', flexDirection: 'row', alignItems: 'center' }}>
+    <View style={{ alignSelf: 'flex-start', backgroundColor: '#e3f2fd', borderRadius: 16, marginVertical: 4, padding: 12, maxWidth: '80%', flexDirection: 'row', alignItems: 'center' }}>
       <Animated.View style={{ opacity: typingAnim }}>
-        <Text style={{ fontSize: 18 }}>...</Text>
+        <Text style={{ fontSize: 18, color: '#1976d2' }}>...</Text>
       </Animated.View>
     </View>
   );
@@ -253,7 +264,7 @@ export default function ChatScreen() {
                 onSubmitEditing={sendMessage}
                 returnKeyType="send"
               />
-              <TouchableOpacity onPress={sendMessage} disabled={loading || !input.trim()} style={{ backgroundColor: '#2196F3', borderRadius: 20, padding: 10 }}>
+              <TouchableOpacity onPress={sendMessage} disabled={loading || !input.trim()} style={{ backgroundColor: '#1976d2', borderRadius: 20, padding: 10 }}>
                 {loading ? <ActivityIndicator color="#FFF" /> : <Text style={{ color: '#FFF' }}>Kirim</Text>}
               </TouchableOpacity>
             </View>

@@ -194,11 +194,11 @@ export default function DbTestPage() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, backgroundColor: '#fff' },
-  section: { marginBottom: 32, padding: 12, borderWidth: 1, borderColor: '#eee', borderRadius: 8 },
-  title: { fontWeight: 'bold', fontSize: 18, marginBottom: 8 },
-  input: { borderWidth: 1, borderColor: '#ccc', borderRadius: 6, padding: 8, marginBottom: 8 },
-  subtitle: { fontWeight: 'bold', marginTop: 12, marginBottom: 4 },
+  container: { flex: 1, padding: 16, backgroundColor: '#F8FAFC' },
+  section: { marginBottom: 32, padding: 12, borderWidth: 1, borderColor: '#e3f2fd', borderRadius: 12, backgroundColor: '#fff', shadowColor: '#1976d2', shadowOpacity: 0.04, shadowRadius: 4, elevation: 2 },
+  title: { fontWeight: 'bold', fontSize: 18, marginBottom: 8, color: '#1976d2' },
+  input: { borderWidth: 1, borderColor: '#e3f2fd', borderRadius: 8, padding: 8, marginBottom: 8, backgroundColor: '#f8fafc' },
+  subtitle: { fontWeight: 'bold', marginTop: 12, marginBottom: 4, color: '#1976d2' },
   empty: { fontStyle: 'italic', color: '#888', marginBottom: 8 },
   dataRow: { fontSize: 13, color: '#333', marginBottom: 2 },
 });

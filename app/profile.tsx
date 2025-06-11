@@ -21,13 +21,13 @@ export default function ProfileScreen() {
       <Text style={{ fontSize: 15, color: '#444', textAlign: 'center', marginBottom: 18 }}>
         A game developer wannabe who happens to be accepted in UPNYK's informatics major
       </Text>
-      <View style={{ backgroundColor: '#f1f5f9', borderRadius: 14, padding: 16, marginBottom: 24, width: '100%' }}>
-        <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: 6, color: '#222' }}>Pesan & Kesan matkul TPM:</Text>
+      <View style={{ backgroundColor: '#e3f2fd', borderRadius: 14, padding: 16, marginBottom: 24, width: '100%' }}>
+        <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: 6, color: '#1976d2' }}>Pesan & Kesan matkul TPM:</Text>
         <Text style={{ fontSize: 15, color: '#333' }}>
           Terima kasih pak bagus, berkat matkul TPM saya jadi tahu betapa pentingnya waktu tidur yang cukup. Matkulnya sangat menantang, 10/10 would definitely recommend
         </Text>
       </View>
-      <Button title="Logout" onPress={handleLogout} color="#d00" />
+      <Button title="Logout" onPress={handleLogout} color="#1976d2" />
     </View>
   );
 }
