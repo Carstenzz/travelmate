@@ -19,6 +19,7 @@
     "expo-location": "^18.1.5",
     "expo-maps": "^0.10.0",
     "expo-router": "^5.0.7",
+    "expo-sensors": "~14.1.4",
     "expo-status-bar": "~2.2.3",
     "install": "^0.13.0",
     "map": "^1.0.1",
