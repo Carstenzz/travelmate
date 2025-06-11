@@ -170,6 +170,7 @@ export default function HomeScreen() {
     const handleAppStateChange = (nextState: string) => {
       if (nextState === 'background' || nextState === 'inactive') {
         notifTimer.current = setTimeout(() => {
+          console.log('Scheduling notification...');
           Notifications.scheduleNotificationAsync({
             content: {
               title: 'TravelMate',

@@ -56,14 +56,14 @@ export default function RegisterScreen() {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', padding: 24 }}>
+    <View style={{ flex: 1, justifyContent: 'center', padding: 24, backgroundColor: '#fff' }}>
       <Text style={{ fontSize: 24, marginBottom: 16 }}>Register</Text>
       <TextInput
         placeholder="Username"
         value={username}
         onChangeText={setUsername}
         autoCapitalize="none"
-        style={{ borderWidth: 1, marginBottom: 12, padding: 8, borderRadius: 8 }}
+        style={{ borderWidth: 1, marginBottom: 12, padding: 8, borderRadius: 8, color: 'black' }}
       />
       <TextInput
         placeholder="Password"
