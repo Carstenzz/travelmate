@@ -3,10 +3,12 @@ import { Modal, View, Text, StyleSheet, TouchableOpacity, TextInput, Platform } 
 import { getLocationNameFromCoords } from '../../utils/reverseGeocode';
 import MapView, { Marker } from 'react-native-maps';
 
-export default function SelectLocationModal({ visible, onClose, onSelect }: {
+export default function SelectLocationModal({ visible, onClose, onSelect, initialRegion, initialSearch }: {
   visible: boolean;
   onClose: () => void;
   onSelect: (lat: number, lon: number, address: string) => void;
+  initialRegion?: { latitude: number; longitude: number; latitudeDelta: number; longitudeDelta: number };
+  initialSearch?: string;
 }) {
   const [region, setRegion] = useState({
     latitude: -7.085097,
@@ -62,6 +64,18 @@ export default function SelectLocationModal({ visible, onClose, onSelect }: {
 
   // Ref for MapView
   const mapRef = useRef<MapView>(null);
+
+  React.useEffect(() => {
+    if (initialRegion) {
+      setRegion(initialRegion);
+      if (mapRef.current) {
+        (mapRef.current as any).animateToRegion(initialRegion, 1000);
+      }
+    }
+    if (initialSearch) {
+      setSearch(initialSearch);
+    }
+  }, [initialRegion, initialSearch, visible]);
 
   return (
     <Modal visible={visible} animationType="slide" onRequestClose={onClose}>

@@ -3,6 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Alert } fr
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { getWishlistById, updateWishlist } from '../../db/firebaseApi';
 import { getLocationNameFromCoords } from '../../utils/reverseGeocode';
+import SelectLocationModal from './modal.selectLocation';
 
 export default function EditWishlistScreen() {
   const { id } = useLocalSearchParams();
@@ -12,6 +13,7 @@ export default function EditWishlistScreen() {
   const [location, setLocation] = useState('');
   const [loading, setLoading] = useState(false);
   const [selecting, setSelecting] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -27,13 +29,7 @@ export default function EditWishlistScreen() {
 
   // Dummy map picker, replace with real map picker page/modal
   const pickLocationOnMap = async () => {
-    setSelecting(true);
-    const lat = -7.085097;
-    const lon = 111.0;
-    setCoordinate(`${lat},${lon}`);
-    const displayName = await getLocationNameFromCoords(lat, lon);
-    setLocation(displayName);
-    setSelecting(false);
+    setModalVisible(true);
   };
 
   const handleSave = async () => {
@@ -67,6 +63,15 @@ export default function EditWishlistScreen() {
       <TouchableOpacity style={styles.locationButton} onPress={pickLocationOnMap} disabled={selecting}>
         <Text style={styles.locationButtonText}>{selecting ? 'Memilih lokasi...' : (location ? 'Perbarui Lokasi' : 'Pilih Lokasi di Map')}</Text>
       </TouchableOpacity>
+      <SelectLocationModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onSelect={async (lat, lon, address) => {
+          setCoordinate(`${lat},${lon}`);
+          setLocation(address);
+        }}
+        initialSearch={placeName}
+      />
       {location ? (
         <View style={styles.locationBox}>
           <Text style={styles.locationLabel}>Lokasi:</Text>

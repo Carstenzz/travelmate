@@ -54,7 +54,7 @@ export default function NotesScreen() {
   if (loading) return <View style={styles.center}><Text>Loading...</Text></View>;
 
   return (
-    <View style={{ flex: 1, paddingTop: 36 }}>
+    <View style={{ flex: 1, paddingTop: 56 }}>
       <WishlistSection onAdd={() => router.push('/Journey/addWishlist')} />
       <TouchableOpacity style={styles.addButton} onPress={() => router.push('/Journey/addNote')}>
         <Text style={styles.addButtonText}>+ Tambah Note</Text>
@@ -95,10 +95,10 @@ export default function NotesScreen() {
 }
 
 const styles = StyleSheet.create({
-  addButton: { backgroundColor: '#1976d2', padding: 14, alignItems: 'center', margin: 16, borderRadius: 8 },
+  addButton: { backgroundColor: '#1976d2', padding: 14, alignItems: 'center', margin: 16, borderRadius: 12 },
   addButtonText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
-  card: { backgroundColor: '#fff', borderRadius: 12, padding: 16, marginBottom: 16, alignItems: 'center', elevation: 2, borderWidth: 1, borderColor: '#e3f2fd' },
-  cardImage: { width: 220, height: 120, borderRadius: 8, marginBottom: 8 },
+  card: { backgroundColor: '#fff', borderRadius: 16, padding: 18, marginBottom: 18, alignItems: 'center', elevation: 2, borderWidth: 1, borderColor: '#e3f2fd', shadowColor: '#1976d2', shadowOpacity: 0.04, shadowRadius: 4 },
+  cardImage: { width: 220, height: 120, borderRadius: 12, marginBottom: 8 },
   cardTitle: { fontSize: 18, fontWeight: 'bold', color: '#1976d2' },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
 });

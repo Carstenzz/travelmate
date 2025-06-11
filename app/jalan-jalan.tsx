@@ -186,7 +186,7 @@ export default function JalanJalanScreen() {
           />
           <Text>Atau</Text>
           <TouchableOpacity
-            style={{ backgroundColor: '#e3f2fd', padding: 10, borderRadius: 8 }}
+            style={{ backgroundColor: '#2196F3', padding: 10, borderRadius: 8 }}
             onPress={() => setModalVisible(true)}
           >
             <Text style={{ color: '#fff', fontWeight: 'bold' }}>Pilih di Map</Text>
@@ -242,7 +242,7 @@ export default function JalanJalanScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center', justifyContent: 'flex-start', padding: 24, backgroundColor: '#fff' },
+  container: { flex: 1, alignItems: 'center', justifyContent: 'flex-start', padding: 24, paddingTop: 56, backgroundColor: '#fff' },
   title: { fontSize: 24, fontWeight: 'bold', marginBottom: 24, color: '#1976d2' },
   label: { fontSize: 16, marginTop: 30, marginBottom: 8 },
   input: { borderWidth: 1, borderColor: '#e3f2fd', borderRadius: 8, padding: 8, width: 200, marginBottom: 16, backgroundColor: '#f8fafc' },

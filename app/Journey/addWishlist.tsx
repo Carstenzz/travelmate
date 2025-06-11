@@ -13,10 +13,15 @@ export default function AddWishlistScreen() {
   const [location, setLocation] = useState('');
   const [loading, setLoading] = useState(false);
   const [selecting, setSelecting] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState<false | { region?: any; search?: string }>(false);
 
   const pickLocationOnMap = async () => {
-    setModalVisible(true);
+    let region = undefined;
+    if (coordinate) {
+      const [lat, lon] = coordinate.split(',').map(Number);
+      region = { latitude: lat, longitude: lon, latitudeDelta: 0.05, longitudeDelta: 0.05 };
+    }
+    setModalVisible({ region, search: placeName });
   };
 
   const handleSave = async () => {
@@ -54,12 +59,15 @@ export default function AddWishlistScreen() {
         <Text style={styles.locationButtonText}>{selecting ? 'Memilih lokasi...' : (location ? 'Perbarui Lokasi' : 'Pilih Lokasi di Map')}</Text>
       </TouchableOpacity>
       <SelectLocationModal
-        visible={modalVisible}
+        visible={!!modalVisible}
         onClose={() => setModalVisible(false)}
         onSelect={async (lat, lon, address) => {
           setCoordinate(`${lat},${lon}`);
           setLocation(address);
+          setModalVisible(false);
         }}
+        initialRegion={modalVisible && typeof modalVisible === 'object' && modalVisible.region ? modalVisible.region : undefined}
+        initialSearch={placeName}
       />
       {location ? (
         <View style={styles.locationBox}>

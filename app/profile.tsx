@@ -1,4 +1,4 @@
-import { View, Text, Button, Alert, Image } from 'react-native';
+import { View, Text, Alert, Image, TouchableOpacity } from 'react-native';
 import { clearSession } from '../db/userSession';
 import { useRouter } from 'expo-router';
 
@@ -10,10 +10,10 @@ export default function ProfileScreen() {
     router.replace('/auth/login');
   };
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff', padding: 24 }}>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F8FAFC', padding: 32 }}>
       <Image
         source={require('../assets/foto.jpeg')}
-        style={{ width: 120, height: 120, borderRadius: 60, marginBottom: 18, borderWidth: 2, borderColor: '#e0e0e0' }}
+        style={{ width: 120, height: 120, borderRadius: 60, marginBottom: 18, borderWidth: 2, borderColor: '#e3f2fd' }}
         resizeMode="cover"
       />
       <Text style={{ fontSize: 22, fontWeight: 'bold', marginBottom: 2, color: '#222' }}>Carstenz Meru Phantara</Text>
@@ -21,13 +21,15 @@ export default function ProfileScreen() {
       <Text style={{ fontSize: 15, color: '#444', textAlign: 'center', marginBottom: 18 }}>
         A game developer wannabe who happens to be accepted in UPNYK's informatics major
       </Text>
-      <View style={{ backgroundColor: '#e3f2fd', borderRadius: 14, padding: 16, marginBottom: 24, width: '100%' }}>
+      <View style={{ backgroundColor: '#e3f2fd', borderRadius: 16, padding: 18, marginBottom: 24, width: '100%' }}>
         <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: 6, color: '#1976d2' }}>Pesan & Kesan matkul TPM:</Text>
         <Text style={{ fontSize: 15, color: '#333' }}>
           Terima kasih pak bagus, berkat matkul TPM saya jadi tahu betapa pentingnya waktu tidur yang cukup. Matkulnya sangat menantang, 10/10 would definitely recommend
         </Text>
       </View>
-      <Button title="Logout" onPress={handleLogout} color="#1976d2" />
+      <TouchableOpacity onPress={handleLogout} style={{ backgroundColor: '#1976d2', borderRadius: 12, paddingVertical: 12, paddingHorizontal: 32, alignItems: 'center', width: '100%' }}>
+        <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>Logout</Text>
+      </TouchableOpacity>
     </View>
   );
 }

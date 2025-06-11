@@ -123,21 +123,12 @@ export default function AddNoteScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={{ alignItems: 'center', marginBottom: 24 }}>
-        <TouchableOpacity style={styles.photoInput} onPress={pickImage}>
-          <View style={{ alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
-            {photoUri ? (
-              <Image source={{ uri: photoUri }} style={styles.photoInputImage} />
-            ) : (
-              <>
-                <Text style={{ fontSize: 40, color: '#888' }}>📷</Text>
-                <Text style={styles.photoInputText}>Tambah Foto (opsional)</Text>
-              </>
-            )}
-            {photoUri ? (
-              <Text style={styles.photoInputText}>Ganti Foto</Text>
-            ) : null}
-          </View>
+      <View style={{ alignItems: 'center'}}>
+        {photoUri ? (
+          <Image source={{ uri: photoUri }} style={{ width: '100%', height: 220, borderRadius: 16, marginBottom: 12, resizeMode: 'cover' }} />
+        ) : null}
+        <TouchableOpacity onPress={pickImage} style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: '#e3f2fd', borderRadius: 12, paddingVertical: 16, marginBottom: 16, width: '100%' }}>
+          <Text style={{ color: '#1976d2', fontWeight: 'bold', fontSize: 16 }}>📷  Tambah/Ganti Foto</Text>
         </TouchableOpacity>
       </View>
       <TextInput placeholder="Judul" value={title} onChangeText={setTitle} style={styles.input} />

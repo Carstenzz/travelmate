@@ -131,14 +131,13 @@ export default function EditNoteScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={{ alignItems: 'center', marginBottom: 24 }}>
-        <TouchableOpacity style={styles.photoInput} onPress={pickImage}>
-          <View style={{ alignItems: 'center' }}>
-            <Text style={{ fontSize: 32, color: '#888' }}>📷</Text>
-            <Text style={styles.photoInputText}>{photoUri ? 'Ganti Foto' : 'Tambah Foto (opsional)'}</Text>
-          </View>
+      <View style={{ alignItems: 'center'}}>
+        {photoUri ? (
+          <Image source={{ uri: photoUri }} style={{ width: '100%', height: 220, borderRadius: 16, marginBottom: 12, resizeMode: 'cover' }} />
+        ) : null}
+        <TouchableOpacity onPress={pickImage} style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: '#e3f2fd', borderRadius: 12, paddingVertical: 16, marginBottom: 16, width: '100%' }}>
+          <Text style={{ color: '#1976d2', fontWeight: 'bold', fontSize: 16 }}>📷  Tambah/Ganti Foto</Text>
         </TouchableOpacity>
-        {photoUri ? <Image source={{ uri: photoUri }} style={styles.previewImage} /> : null}
       </View>
       <TextInput placeholder="Judul" value={title} onChangeText={setTitle} style={styles.input} />
       <TextInput placeholder="Deskripsi" value={description} onChangeText={setDescription} style={[styles.input, { height: 80 }]} multiline />
@@ -182,6 +181,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 8,
     textAlign: 'center',
+  },
+  photoInputImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 8,
   },
   previewImage: {
     width: 120,

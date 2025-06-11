@@ -51,9 +51,9 @@ export default function WishlistSection({ onAdd }: { onAdd: () => void }) {
 
 const styles = StyleSheet.create({
   sectionTitle: { fontWeight: 'bold', fontSize: 18 },
-  addButton: { backgroundColor: '#1976d2', paddingHorizontal: 14, paddingVertical: 6, borderRadius: 8 },
+  addButton: { backgroundColor: '#1976d2', paddingHorizontal: 16, paddingVertical: 10, borderRadius: 12 },
   addButtonText: { color: '#fff', fontWeight: 'bold', fontSize: 15 },
-  wishCard: { backgroundColor: '#fff', borderRadius: 10, padding: 12, marginBottom: 8, elevation: 1, borderWidth: 1, borderColor: '#e3f2fd' },
+  wishCard: { backgroundColor: '#fff', borderRadius: 16, padding: 16, marginBottom: 10, elevation: 1, borderWidth: 1, borderColor: '#e3f2fd', shadowColor: '#1976d2', shadowOpacity: 0.04, shadowRadius: 4 },
   wishName: { fontWeight: 'bold', fontSize: 16, color: '#1976d2' },
   wishLocation: { color: '#555', fontSize: 13 },
 });
