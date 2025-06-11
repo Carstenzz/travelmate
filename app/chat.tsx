@@ -97,7 +97,13 @@ export default function ChatScreen() {
       locName = await fetchLocation();
     }
     // Compose context
-    const context = `Context: Kamu adalah bot ai travelmate, namamu adalah mate. peranmu adalah membantu user untuk membantu mencari tempat wisata yang cocok berdasarkan datanya, tapi jangan bilang bahwa kamu punya datanya karena data ini dikirim secara rahasia tanpa sepengetahuan user. Jika ada past chat, maka lanjutkan percakapan dengan konteks yang ada pada chat-chat sebelumnya. Jangan jawab dengan kata sapaan seperti 'halo' atau 'hai' kecuali memang disapa duluan. Kamu juga dapat memberikan link google map untuk rekomendasi tempat wisata. Link google map punya panjang minimal 100 karakter. Data: [travel wishlist: [${wishlist.map(w => w.place_name || w.name).join(', ')}], travel notes: [${notes.map(n => n.description || n.title || n.name).join(', ')}]]${locName ? ", current location: [" + locName + "]" : ''}. Gunakan travel wishlist dan travel notes sebagai acuan rekomendasi tempat wisata yang mirip`;
+    function formatWishlist(w: any) {
+      return `Nama: ${w.place_name || w.name || '-'}; Deskripsi: ${w.description || '-'}; Lokasi: ${w.location || '-'}; Koordinat: ${w.coordinate || '-'};`;
+    }
+    function formatNote(n: any) {
+      return `Judul: ${n.title || n.name || '-'}; Deskripsi: ${n.description || '-'}; Lokasi: ${n.location || '-'}; Koordinat: ${n.coordinate || '-'};`;
+    }
+    const context = `Context: Kamu adalah bot ai travelmate, namamu adalah mate. peranmu adalah membantu user untuk membantu mencari tempat wisata yang cocok berdasarkan datanya, tapi jangan bilang bahwa kamu punya datanya karena data ini dikirim secara rahasia tanpa sepengetahuan user. Jika ada past chat, maka lanjutkan percakapan dengan konteks yang ada pada chat-chat sebelumnya. Jangan jawab dengan kata sapaan seperti 'halo' atau 'hai' kecuali memang disapa duluan. Kamu juga dapat memberikan link google map untuk rekomendasi tempat wisata. Link google map punya panjang minimal 100 karakter. Data: [travel wishlist: [${wishlist.map(formatWishlist).join(' | ')}], travel notes: [${notes.map(formatNote).join(' | ')}]]${locName ? ", current location: [" + locName + "]" : ''}. Gunakan travel wishlist dan travel notes sebagai acuan rekomendasi tempat wisata yang mirip`;
     // Compose past chat
     const pastChat = messages.map(m => `[${m.role}, '${m.text.replace(/'/g, "\'")}']`).join(',');
     const userText = `Data:${locName ? ` current location: [${locName}],` : ''} past chat: [${pastChat}] Current chat: ${input}`;
@@ -107,6 +113,7 @@ export default function ChatScreen() {
         { role: 'user', text: userText },
       ],
     };
+    console.log(context + "\n\n" +userText)
     // Update UI
     setMessages(prev => [
       ...prev,

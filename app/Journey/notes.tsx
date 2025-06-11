@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,6 +9,8 @@ export default function NotesScreen() {
   const router = useRouter();
   const [notes, setNotes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [sortBy, setSortBy] = useState<'abjad' | 'tanggal'>('tanggal');
 
   useEffect(() => {
     (async () => {
@@ -28,6 +30,27 @@ export default function NotesScreen() {
     })();
   }, []);
 
+  // Sort and filter notes
+  let sortedNotes = [...notes];
+  if (sortBy === 'abjad') {
+    sortedNotes.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+  } else {
+    // Default: tanggal terbaru di atas, asumsikan ada field created_at (string/timestamp)
+    sortedNotes.sort((a, b) => {
+      // Fallback: jika tidak ada created_at, urutkan dari id (Firestore id biasanya urut waktu)
+      const aTime = a.created_at ? new Date(a.created_at).getTime() : (a.id || '').localeCompare(b.id || '');
+      const bTime = b.created_at ? new Date(b.created_at).getTime() : (b.id || '').localeCompare(a.id || '');
+      return bTime - aTime;
+    });
+  }
+  const filteredNotes = search.trim().length === 0
+    ? sortedNotes
+    : sortedNotes.filter(note =>
+        (note.title || '').toLowerCase().includes(search.toLowerCase()) ||
+        (note.description || '').toLowerCase().includes(search.toLowerCase()) ||
+        (note.location || '').toLowerCase().includes(search.toLowerCase())
+      );
+
   if (loading) return <View style={styles.center}><Text>Loading...</Text></View>;
 
   return (
@@ -36,9 +59,29 @@ export default function NotesScreen() {
       <TouchableOpacity style={styles.addButton} onPress={() => router.push('/Journey/addNote')}>
         <Text style={styles.addButtonText}>+ Tambah Note</Text>
       </TouchableOpacity>
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, marginBottom: 8, gap: 8 }}>
+        <TextInput
+          style={{ flex: 1, borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 8, marginBottom: 8 }}
+          placeholder="Cari judul, deskripsi, atau lokasi..."
+          value={search}
+          onChangeText={setSearch}
+        />
+        <TouchableOpacity
+          style={{ backgroundColor: sortBy === 'tanggal' ? '#007AFF' : '#eee', padding: 8, borderRadius: 8 }}
+          onPress={() => setSortBy('tanggal')}
+        >
+          <Text style={{ color: sortBy === 'tanggal' ? '#fff' : '#333' }}>Tanggal</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{ backgroundColor: sortBy === 'abjad' ? '#007AFF' : '#eee', padding: 8, borderRadius: 8 }}
+          onPress={() => setSortBy('abjad')}
+        >
+          <Text style={{ color: sortBy === 'abjad' ? '#fff' : '#333' }}>Abjad</Text>
+        </TouchableOpacity>
+      </View>
       <ScrollView contentContainerStyle={{ padding: 16 }}>
-        {notes.length === 0 && <Text style={{ textAlign: 'center', marginTop: 32 }}>Belum ada catatan.</Text>}
-        {notes.map(note => (
+        {filteredNotes.length === 0 && <Text style={{ textAlign: 'center', marginTop: 32 }}>Belum ada catatan.</Text>}
+        {filteredNotes.map(note => (
           <TouchableOpacity key={note.id} style={styles.card} onPress={() => router.push({ pathname: '/Journey/editNote', params: { id: note.id } })}>
             {note.photo_url ? (
               <Image source={{ uri: note.photo_url }} style={styles.cardImage} />

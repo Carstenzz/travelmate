@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Modal, View, Text, StyleSheet, TouchableOpacity, TextInput, Platform } from 'react-native';
-import MapView, { Marker, MapPressEvent } from 'react-native-maps';
 import { getLocationNameFromCoords } from '../../utils/reverseGeocode';
+import MapView, { Marker } from 'react-native-maps';
 
 export default function SelectLocationModal({ visible, onClose, onSelect }: {
   visible: boolean;
@@ -19,7 +19,12 @@ export default function SelectLocationModal({ visible, onClose, onSelect }: {
   const [address, setAddress] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleMapPress = async (e: MapPressEvent) => {
+  // Google Maps API Key
+  const GOOGLE_MAPS_API_KEY = 'AIzaSyDoPi5NJSx5-1pDloTcGMDsQijI1RoL0BI';
+
+  // Handler for map press (expo-maps)
+  const handleMapPress = async (e: any) => {
+    // expo-maps: e.nativeEvent.coordinate
     const { latitude, longitude } = e.nativeEvent.coordinate;
     setMarker({ lat: latitude, lon: longitude });
     setLoading(true);
@@ -42,9 +47,21 @@ export default function SelectLocationModal({ visible, onClose, onSelect }: {
       setMarker({ lat, lon });
       const addr = await getLocationNameFromCoords(lat, lon);
       setAddress(addr);
+      // Center and animate map to searched location
+      if (mapRef.current) {
+        (mapRef.current as any).animateToRegion({
+          latitude: lat,
+          longitude: lon,
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05,
+        }, 1000);
+      }
     }
     setLoading(false);
   };
+
+  // Ref for MapView
+  const mapRef = useRef<MapView>(null);
 
   return (
     <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
@@ -62,11 +79,15 @@ export default function SelectLocationModal({ visible, onClose, onSelect }: {
             <Text style={{ color: '#fff' }}>Cari</Text>
           </TouchableOpacity>
         </View>
+        {/* Google Maps (react-native-maps) */}
         <MapView
-          style={styles.map}
+          ref={mapRef}
+          style={[styles.map, { height: 450 }]}
           region={region}
           onRegionChangeComplete={setRegion}
           onPress={handleMapPress}
+          provider={Platform.OS === 'android' ? 'google' : undefined}
+          rotateEnabled={true}
         >
           {marker && (
             <Marker coordinate={{ latitude: marker.lat, longitude: marker.lon }} />
@@ -101,7 +122,7 @@ const styles = StyleSheet.create({
   searchRow: { flexDirection: 'row', marginBottom: 8 },
   searchInput: { flex: 1, borderWidth: 1, borderColor: '#ccc', borderRadius: 6, padding: 8, marginRight: 8 },
   searchButton: { backgroundColor: '#007AFF', paddingHorizontal: 14, paddingVertical: 8, borderRadius: 6, alignItems: 'center', justifyContent: 'center' },
-  map: { width: '100%', height: 300, borderRadius: 10 },
+  map: { width: '100%', height: 450, borderRadius: 10 },
   cancelButton: { padding: 12, borderRadius: 8, backgroundColor: '#eee', minWidth: 80, alignItems: 'center' },
   saveButton: { padding: 12, borderRadius: 8, backgroundColor: '#34a853', minWidth: 80, alignItems: 'center' },
 });

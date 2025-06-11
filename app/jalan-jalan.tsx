@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ActivityIndicator, KeyboardAvoidingView, Platform, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, ActivityIndicator, KeyboardAvoidingView, Platform, Image, TouchableOpacity } from 'react-native';
+import tzlookup from 'tz-lookup';
+import SelectLocationModal from './Journey/modal.selectLocation';
 
 export default function JalanJalanScreen() {
   const [uang, setUang] = useState('');
@@ -7,56 +9,112 @@ export default function JalanJalanScreen() {
   const [loading, setLoading] = useState(false);
   const [hasil, setHasil] = useState<{ uangConverted: number; jamLokal: string; currency: string } | null>(null);
   const [mateComment, setMateComment] = useState('');
-  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedLatLon, setSelectedLatLon] = useState<{ lat: number; lon: number; address: string } | null>(null);
 
   // Helper: fetch location info (currency, timezone) from Nominatim & GeoNames
-  const fetchLocationInfo = async (place: string) => {
-    // 1. Get lat/lon from Nominatim
-    const nomRes = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(place)}`);
-    const nomData = await nomRes.json();
-    if (!nomData[0]) throw new Error('Lokasi tidak ditemukan');
-    const { lat, lon, display_name } = nomData[0];
-    // 2. Get timezone from GeoNames
-    const geoRes = await fetch(`http://api.geonames.org/timezoneJSON?lat=${lat}&lng=${lon}&username=demo`); // ganti 'demo' dengan username geonames jika punya
-    const geoData = await geoRes.json();
+  const fetchLocationInfo = async (place: string, lat?: number, lon?: number) => {
+    // 1. Get lat/lon from Nominatim, or use provided lat/lon
+    let latVal = lat, lonVal = lon, display_name = place;
+    if (lat == null || lon == null) {
+      const nomRes = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(place)}`, {
+        headers: {
+          'User-Agent': 'travelmate-app/1.0 (your@email.com)',
+          'Accept-Language': 'en',
+        },
+      });
+      if (!nomRes.ok) {
+        const text = await nomRes.text();
+        throw new Error('Nominatim error: ' + nomRes.status + ' ' + text);
+      }
+      const nomData = await nomRes.json();
+      if (!nomData[0]) throw new Error('Lokasi tidak ditemukan');
+      latVal = nomData[0].lat;
+      lonVal = nomData[0].lon;
+      display_name = nomData[0].display_name;
+    }
+    // 2. Get timezone from tz-lookup
+    const timezone = tzlookup(Number(latVal), Number(lonVal));
     // 3. Get currency from restcountries
-    const countryRes = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+    const countryRes = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latVal}&lon=${lonVal}`, {
+      headers: {
+        'User-Agent': 'travelmate-app/1.0 (your@email.com)',
+        'Accept-Language': 'en',
+      },
+    });
     const countryData = await countryRes.json();
     const countryCode = countryData.address?.country_code?.toUpperCase();
     let currency = 'USD';
     if (countryCode) {
-      const restRes = await fetch(`https://restcountries.com/v3.1/alpha/${countryCode}`);
+      const restRes = await fetch(`https://restcountries.com/v3.1/alpha/${countryCode}`, {
+        headers: {
+          'User-Agent': 'travelmate-app/1.0 (your@email.com)',
+          'Accept-Language': 'en',
+        },
+      });
       const restData = await restRes.json();
       currency = restData[0]?.currencies ? Object.keys(restData[0].currencies)[0] : 'USD';
     }
-    return { lat, lon, timezone: geoData.timezoneId, currency, display_name };
+    return { lat: latVal, lon: lonVal, timezone, currency, display_name };
   };
 
   // Helper: fetch currency conversion
   const fetchCurrency = async (amount: string, to: string) => {
-    const kursRes = await fetch(`https://api.exchangerate.host/convert?from=IDR&to=${to}&amount=${amount}`);
-    const kursData = await kursRes.json();
-    return kursData.result;
+    if (to === 'IDR') return Number(amount); // Jika tujuan IDR, return langsung
+    try {
+      console.log(to + " - " + amount)
+      const kursRes = await fetch(`https://api.frankfurter.app/latest?amount=${amount}&from=IDR&to=${to}`, {
+        headers: {
+          'User-Agent': 'travelmate-app/1.0 (your@email.com)',
+          'Accept-Language': 'en',
+        },
+      });
+      const kursData = await kursRes.json();
+      console.log("kursdata : ", kursData["rates"][to]);
+      if (kursData && kursData["rates"][to]) return kursData["rates"][to];
+    } catch (e) {
+      console.log('fetch kurs error', e);
+    }
+    // fallback static rates
+    const fallbackRates: Record<string, number> = {
+      USD: 16000,
+      JPY: 110,
+      EUR: 17000,
+      GBP: 19000,
+      AUD: 10500,
+    };
+    const rate = fallbackRates[to] || 16000;
+    return Number(amount) / rate;
   };
 
   // Helper: fetch time in timezone
   const fetchTime = async (timezone: string) => {
-    const timeRes = await fetch(`https://worldtimeapi.org/api/timezone/${timezone}`);
-    const timeData = await timeRes.json();
-    if (timeData.datetime) {
-      const date = new Date(timeData.datetime);
-      return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-    }
-    return '-';
+    // Ambil waktu UTC sekarang
+    const now = new Date();
+    // Format waktu lokal tujuan
+    return now.toLocaleString('en-GB', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+      timeZone: timezone,
+    });
   };
 
   const handleSubmit = async () => {
-    if (!uang || isNaN(Number(uang)) || !tujuan) return;
+    if ((!uang || isNaN(Number(uang))) || (!tujuan && !selectedLatLon)) return;
     setLoading(true);
     setHasil(null);
     setMateComment('');
     try {
-      const loc = await fetchLocationInfo(tujuan);
+      let loc;
+      if (selectedLatLon) {
+        loc = await fetchLocationInfo(selectedLatLon.address, selectedLatLon.lat, selectedLatLon.lon);
+      } else {
+        loc = await fetchLocationInfo(tujuan);
+      }
       const uangConverted = await fetchCurrency(uang, loc.currency);
       const jamLokal = await fetchTime(loc.timezone);
       setHasil({ uangConverted, jamLokal, currency: loc.currency });
@@ -68,11 +126,11 @@ export default function JalanJalanScreen() {
           messages: [
             {
               role: 'user',
-              text: 'Context: Kamu adalah bot ai travelmate, namamu adalah mate. peranmu adalah membantu user untuk membantu mencari tempat wisata. Khusus untuk kondisi ini, kamu akan memberikan komentar tentang sejumlah uang dalam suatu wilayah bisa untuk apa aja, boleh sambil diselingi candaan. Jawab dengan jawaban singkat saja, kurang dari 15 kata. Jangan ucapkan kata salam seperti halo dan hai'
+              text: 'Context: Kamu adalah bot ai travelmate, namamu adalah mate. peranmu adalah membantu user untuk membantu mencari tempat wisata. Khusus untuk kondisi ini, kamu akan memberikan komentar tentang sejumlah uang untuk jalan-jalan ke suatu wilayah dari indonesia bisa atau tidak, dan jika bisa pakai apa dan dapat apa disana, boleh sambil diselingi candaan. Jawab dengan jawaban singkat saja, kurang dari 20 kata. Jangan ucapkan kata salam seperti halo dan hai'
             },
             {
               role: 'user',
-              text: `Data: [uang: $${uangConverted?.toFixed(2)}, tempat: ${tujuan.toLowerCase()}]`
+              text: `Data: [uang: currency: ${loc.currency}, ${uangConverted?.toFixed(2)}, tempat: ${loc.display_name?.toLowerCase()}]`
             }
           ]
         })
@@ -81,8 +139,7 @@ export default function JalanJalanScreen() {
       setMateComment(chatData.response);
     } catch (e) {
       setHasil(null);
-      setMateComment('Gagal mengambil data.');
-      console.log(e);
+      setMateComment('Gagal mengambil data.' + e);
     }
     setLoading(false);
   };
@@ -90,14 +147,7 @@ export default function JalanJalanScreen() {
   // Optional: simple suggestion (autocomplete)
   const handleTujuanChange = (text: string) => {
     setTujuan(text);
-    if (text.length > 2) {
-      fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(text)}`)
-        .then(res => res.json())
-        .then(data => setSuggestions(data.map((d: any) => d.display_name)))
-        .catch(() => setSuggestions([]));
-    } else {
-      setSuggestions([]);
-    }
+    // autocomplete/rec engine is disabled
   };
 
   return (
@@ -105,21 +155,31 @@ export default function JalanJalanScreen() {
       <View style={styles.container}>
         <Text style={styles.title}>Jalan-jalan Page</Text>
         <Text style={styles.label}>Mau pergi ke mana?</Text>
-        <TextInput
-          style={styles.input}
-          value={tujuan}
-          onChangeText={handleTujuanChange}
-          placeholder="Ketik tujuan (misal: New York, Tokyo, dll)"
+        
+        <View style={{ flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+          <TextInput
+            style={{borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 8, width: 200}}
+            value={tujuan}
+            onChangeText={handleTujuanChange}
+            placeholder="Ketik tujuan (misal: New York, Tokyo, dll)"
+          />
+          <Text>Atau</Text>
+          <TouchableOpacity
+            style={{ backgroundColor: '#34a853', padding: 10, borderRadius: 8 }}
+            onPress={() => setModalVisible(true)}
+          >
+            <Text style={{ color: '#fff', fontWeight: 'bold' }}>Pilih di Map</Text>
+          </TouchableOpacity>
+        </View>
+        <SelectLocationModal
+          visible={modalVisible}
+          onClose={() => setModalVisible(false)}
+          onSelect={(lat, lon, address) => {
+            setSelectedLatLon({ lat, lon, address });
+            setTujuan(address);
+            setModalVisible(false);
+          }}
         />
-        {suggestions.length > 0 && (
-          <ScrollView style={{ maxHeight: 100, width: 200, backgroundColor: '#fafafa', borderRadius: 8, marginBottom: 8 }}>
-            {suggestions.map((s, i) => (
-              <TouchableOpacity key={i} onPress={() => { setTujuan(s); setSuggestions([]); }}>
-                <Text style={{ padding: 8 }}>{s}</Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        )}
         <Text style={styles.label}>Punya uang berapa (Rp)?</Text>
         <TextInput
           style={styles.input}
@@ -150,7 +210,7 @@ export default function JalanJalanScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, alignItems: 'center', justifyContent: 'flex-start', padding: 24, backgroundColor: '#fff' },
   title: { fontSize: 24, fontWeight: 'bold', marginBottom: 24 },
-  label: { fontSize: 16, marginTop: 16, marginBottom: 8 },
+  label: { fontSize: 16, marginTop: 30, marginBottom: 8},
   input: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 8, width: 200, marginBottom: 16 },
   dropdownContainer: { flexDirection: 'row', gap: 8, marginBottom: 16 },
   dropdownItem: { padding: 8, borderRadius: 8, borderWidth: 1, borderColor: '#ccc', marginHorizontal: 4, fontSize: 16 },
