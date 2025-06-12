@@ -29,10 +29,9 @@ const SPEAK_MESSAGES = [
 ];
 
 const NOTIF_MESSAGES = [
-  'Kemana aja? Mate pengen jalan-jalan nih!',
-  'Ayo, jangan lama-lama ninggalin mate sendiri~',
-  'Mate kangen, yuk jalan-jalan bareng!',
-  'Udah lama nggak dibuka, mate bosan nih!',
+  'Kemana aja? Mate pengen jalan-jalan ni',
+  'Mate gabut, yok jalan-jalan bareng',
+  'Udah lama nggak dibuka, mate bosen ni',
 ];
 
 export default function HomeScreen() {
