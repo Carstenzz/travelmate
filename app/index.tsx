@@ -176,7 +176,7 @@ export default function HomeScreen() {
             },
             trigger: null,
           });
-        }, 10000); // 10 detik
+        }, 5000);
       } else if (nextState === 'active') {
         if (notifTimer.current) clearTimeout(notifTimer.current);
       }
