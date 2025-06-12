@@ -48,21 +48,23 @@ export default function LoginScreen() {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', padding: 24 }}>
+    <View style={{ flex: 1, backgroundColor: '#fff', justifyContent: 'center', padding: 24 }}>
       <Text style={{ fontSize: 24, marginBottom: 16 }}>Login</Text>
       <TextInput
         placeholder="Username"
         value={username}
         onChangeText={setUsername}
         autoCapitalize="none"
-        style={{ borderWidth: 1, marginBottom: 12, padding: 8, borderRadius: 8 }}
+        style={[{ borderWidth: 1, marginBottom: 12, padding: 8, borderRadius: 8 }, { color: '#000' }]}
+        placeholderTextColor="#888"
       />
       <TextInput
         placeholder="Password"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
-        style={{ borderWidth: 1, marginBottom: 12, padding: 8, borderRadius: 8 }}
+        style={[{ borderWidth: 1, marginBottom: 12, padding: 8, borderRadius: 8 }, { color: '#000' }]}
+        placeholderTextColor="#888"
       />
       <Button title={loading ? 'Loading...' : 'Login'} onPress={handleLogin} disabled={loading} />
       <Text style={{ marginTop: 16 }}>

@@ -51,10 +51,10 @@ export default function NotesScreen() {
         (note.location || '').toLowerCase().includes(search.toLowerCase())
       );
 
-  if (loading) return <View style={styles.center}><Text>Loading...</Text></View>;
+  if (loading) return <View style={[styles.center, { backgroundColor: '#fff' }]}><Text>Loading...</Text></View>;
 
   return (
-    <View style={{ flex: 1, paddingTop: 56 }}>
+    <View style={{ flex: 1, backgroundColor: '#fff', paddingTop: 56 }}>
       <WishlistSection onAdd={() => router.push('/Journey/addWishlist')} />
       <TouchableOpacity style={styles.addButton} onPress={() => router.push('/Journey/addNote')}>
         <Text style={styles.addButtonText}>+ Tambah Note</Text>

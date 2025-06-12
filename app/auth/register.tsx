@@ -63,22 +63,25 @@ export default function RegisterScreen() {
         value={username}
         onChangeText={setUsername}
         autoCapitalize="none"
-        style={{ borderWidth: 1, marginBottom: 12, padding: 8, borderRadius: 8, color: 'black' }}
-      />
+        style={[{ borderWidth: 1, marginBottom: 12, padding: 8, borderRadius: 8 }, { color: '#000' }]}
+        placeholderTextColor="#888"
+        />
       <TextInput
         placeholder="Password"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
-        style={{ borderWidth: 1, marginBottom: 12, padding: 8, borderRadius: 8 }}
-      />
+        style={[{ borderWidth: 1, marginBottom: 12, padding: 8, borderRadius: 8 }, { color: '#000' }]}
+        placeholderTextColor="#888"
+        />
       <TextInput
         placeholder="Konfirmasi Password"
         value={confirmPassword}
         onChangeText={setConfirmPassword}
         secureTextEntry
-        style={{ borderWidth: 1, marginBottom: 12, padding: 8, borderRadius: 8 }}
-      />
+        style={[{ borderWidth: 1, marginBottom: 12, padding: 8, borderRadius: 8 }, { color: '#000' }]}
+        placeholderTextColor="#888"
+        />
       <Button title={loading ? 'Loading...' : 'Register'} onPress={handleRegister} disabled={loading} />
       <Text style={{ marginTop: 16 }}>
         Sudah punya akun?{' '}

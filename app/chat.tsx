@@ -200,6 +200,8 @@ export default function ChatScreen() {
       shadowOpacity: 0.06,
       shadowRadius: 4,
       elevation: 2,
+      marginRight: item.role === 'user' ? 12 : 40, // padding kanan untuk user
+      marginLeft: item.role === 'bot' ? 12 : 40,  // padding kiri untuk bot
     }}>
       {item.role === 'bot' ? (
         <Text style={{ color: '#222' }}>{renderTextWithMapButtons(item.text)}</Text>
@@ -224,7 +226,7 @@ export default function ChatScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={0}
     >
-      <View style={{ flex: 1, padding: 10, paddingBottom: 10 }}>
+      <View style={{ flex: 1, backgroundColor: '#fff' }}>
         {initialLoading ? (
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <ActivityIndicator size="large" color="#2196F3" />
