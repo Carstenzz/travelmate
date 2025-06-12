@@ -160,13 +160,11 @@ export default function HomeScreen() {
   const BIG_SPRITE_HEIGHT = screenHeight * 0.6;
   const BIG_SPRITE_WIDTH = BIG_SPRITE_HEIGHT; // tetap square agar pixel art tidak gepeng
 
-  // Request permission on mount
   useEffect(() => {
+    // Request permission on mount
     Notifications.requestPermissionsAsync();
-  }, []);
 
-  // AppState listener untuk notifikasi saat app background
-  useEffect(() => {
+    // AppState listener untuk notifikasi saat app background
     const handleAppStateChange = (nextState: string) => {
       if (nextState === 'background' || nextState === 'inactive') {
         notifTimer.current = setTimeout(() => {
