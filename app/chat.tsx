@@ -132,7 +132,7 @@ export default function ChatScreen() {
     ).start();
     try {
       console.log(body)
-      const res = await fetch('https://h-02-451302.et.r.appspot.com/api/chat', {
+      const res = await fetch(process.env.CHAT_API_URL || '', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),

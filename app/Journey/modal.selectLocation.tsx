@@ -22,7 +22,7 @@ export default function SelectLocationModal({ visible, onClose, onSelect, initia
   const [loading, setLoading] = useState(false);
 
   // Google Maps API Key
-  const GOOGLE_MAPS_API_KEY = 'AIzaSyDoPi5NJSx5-1pDloTcGMDsQijI1RoL0BI';
+  const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY || '';
 
   // Handler for map press (expo-maps)
   const handleMapPress = async (e: any) => {
@@ -39,7 +39,7 @@ export default function SelectLocationModal({ visible, onClose, onSelect, initia
     if (!search) return;
     setLoading(true);
     // Use Nominatim search API
-    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(search)}&format=json&limit=1`;
+    const url = `${process.env.NOMINATIM_BASE_URL}/search?q=${encodeURIComponent(search)}&format=json&limit=1`;
     const res = await fetch(url, { headers: { 'User-Agent': 'travelmate-app' } });
     const data = await res.json();
     if (data && data.length > 0) {

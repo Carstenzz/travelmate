@@ -1,7 +1,6 @@
 // Firebase Firestore REST API config and basic CRUD functions
 
-const FIREBASE_PROJECT_ID = 'travelmate-76ccd';
-const FIREBASE_BASE_URL = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents`;
+const FIREBASE_BASE_URL = process.env.FIREBASE_BASE_URL || '';
 
 export async function addUser({ id, username, password }: { id: string; username: string; password: string }) {
   const url = `${FIREBASE_BASE_URL}/users?documentId=${id}`;
